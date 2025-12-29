@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Social_network.BLL/Social_network.BLL.csproj" Id="4ac60a68-f4e5-4e5c-a548-710bef545c08" />
+  <Project Path="Social_network.DAL.Tests/Social_network.DAL.Tests.csproj" Id="20938290-64c5-4635-8e9f-b756fae55b00" />
+  <Project Path="Social_network.DLL/Social_network.DAL.csproj" Id="edcdfc26-0d25-462c-8e51-2afc66c9646e" />
+  <Project Path="Social_Network/Social_Network.PLL.csproj" />
+</Solution>

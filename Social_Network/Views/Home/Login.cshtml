@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Вход в аккаунт";
+}
+
+<style>
+    table {
+        border-spacing: 0 15px;
+        align-self: center;
+    }
+
+    th {
+        background-color: #4287f5;
+        color: white;
+    }
+
+    th,
+    td {
+        width: 150px;
+        text-align: center;
+        border: none;
+        padding: 5px;
+    }
+
+    h2 {
+        color: #4287f5;
+    }
+
+    .submit-button {
+        position: absolute;
+        margin-left: 140px;
+    }
+</style>
+
+<div class="text-center">
+    <div>
+        @if (Model == null)
+        {
+            <h3 style="text-align: left">Добро пожаловать в наш блог!</h3>
+            <br>
+
+            <form method="post">
+                <table>
+                    <tr>
+                        <td>Email:</td>
+                        <td><input type="text" name="Email" required title="Пожалуйста, введите поле" /> </td>
+                    </tr>
+                    <tr>
+                        <td>Password:</td>
+                        <td><input type="text" name="Password" minlenght="8" required title="Пожалуйста, введите поле" /></td>
+                    </tr>
+                </table>
+                <br>
+                <div class="submit-button">
+                    <input type="submit" value="Вход" />
+                </div>
+            </form>
+        }
+        else
+        {
+            <div>
+                <h2>Ваш профиль</h2>
+                <p><strong>Имя:</strong> @Model.FirstName</p>
+                <p><strong>Фамилия:</strong> @Model.LastName</p>
+                <p><strong>Email:</strong> @Model.Email</p>
+                <p><strong>Дата рождения:</strong> @Model.BirthDate.ToString("dd.MM.yyyy")</p>
+            </div>
+           
+        }
+    </div>
+</div>

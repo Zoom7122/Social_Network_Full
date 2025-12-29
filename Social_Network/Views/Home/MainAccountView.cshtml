@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Профиль";
+}
+
+<h1>Добро пожаловать, @Model.FirstName @Model.LastName</h1>
+
+<div>
+    <h2>Ваш профиль</h2>
+    <p><strong>Имя:</strong> @Model.FirstName</p>
+    <p><strong>Фамилия:</strong> @Model.LastName</p>
+    <p><strong>Email:</strong> @Model.Email</p>
+    <p><strong>Дата рождения:</strong> @Model.BirthDate.ToString("dd.MM.yyyy")</p>
+    <button type="button"
+            onclick="window.location.href='@Url.Action("AddFriends", "Home")'"
+            class="btn btn-primary">
+        Перейти
+    </button>
+</div>

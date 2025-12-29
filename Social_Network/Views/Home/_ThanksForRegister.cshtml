@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Регистрация нового пользователя.";
+}
+<style>
+    .submit-button {
+        position: absolute;
+        margin-left: 140px;
+    }
+</style>
+
+<script>
+
+    function GoToHomeIndex()
+    {
+        window.location.href = '@Url.Action("index", "Home")'
+    }
+
+</script>
+
+<div class="text-center">
+    <br>
+    <div>
+        <br>
+        <p>@Model.FirstName, спасибо за регистрацию!</p>
+    </div>
+    <div class="submit-button">
+        <input type="submit" value="На главную" onclick="GoToHomeIndex()"/>
+    </div>
+</div>
