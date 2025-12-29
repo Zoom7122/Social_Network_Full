@@ -16,19 +16,12 @@ namespace Social_network.BLL.Validations
             _userRepo = userRepo;
         }
 
-        public async Task<UserViewModel> UserCanLOgINAccount(ForLoginUser user)
+        public async Task<User> UserCanLOgINAccount(ForLoginUser user)
         {
             var us = await _userRepo.GetUserByEmail(user.Email);
             if (us != null && us.password == user.Password)
             {
-                var userModel = new UserViewModel()
-                {
-                    FirstName = us.FirstName,
-                    LastName = us.LastName,
-                    Email = us.Email,
-                    BirthDate = us.BirthDate,
-                };
-                return userModel;
+                return us;
             }
             else return null;
         }

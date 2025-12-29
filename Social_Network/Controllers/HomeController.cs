@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using Social_network.BLL;
@@ -6,6 +9,7 @@ using Social_network.BLL.Models;
 using Social_network.DAL.Models;
 using Social_Network.Models;
 using System.Diagnostics;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Social_Network.Controllers
@@ -19,30 +23,18 @@ namespace Social_Network.Controllers
             _validUserBLL = validationUser;
             _correctDataUserBLL = correctDataUserValidation;
         }
-
+        [AllowAnonymous]
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Login","Home");
         }
-
+        [AllowAnonymous]
         public IActionResult Privacy()
         {
             return View();
         }
 
-        [HttpGet]
-        [Route("AddFriends")]
-        public IActionResult AddFriends()
-        {
-            return View();
-        }
-
-        //[HttpPost]
-        //public IActionResult AddFriends()
-        //{
-        //    return View();
-        //}
-
+        [AllowAnonymous]
         [HttpGet]
         [Route("Login")]
         public IActionResult Login()
@@ -50,6 +42,7 @@ namespace Social_Network.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login(ForLoginUser user)
@@ -57,11 +50,41 @@ namespace Social_Network.Controllers
             var us = await _correctDataUserBLL.UserCanLOgINAccount(user);
             if (us != null)
             {
+                var claims = new List<Claim>
+                {
+                    new Claim("UserId", us.Id.ToString())
+                };
+
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                var authProperties = new AuthenticationProperties
+                {
+                    // ВАЖНО: IsPersistent = true создаёт постоянную куку
+                    IsPersistent = true, // ? Это ключевая настройка!
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7),
+                    AllowRefresh = true,
+                    IssuedUtc = DateTimeOffset.UtcNow
+                };
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(identity),
+                    authProperties);
+
                 return View("MainAccountView",us);
             }
             else return StatusCode(404, "Не найден пользователь");
         }
 
+        [Authorize]
+        [HttpGet]
+        [Route("MainAccountView")]
+        public async Task<IActionResult> MainAccountView(User user)
+        {
+            return View("MainAccountView", user);
+        }
+
+        [AllowAnonymous]
         [HttpGet]
         [Route("Register")]
         public IActionResult Register()
@@ -69,6 +92,7 @@ namespace Social_Network.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("Register")]
         public async Task<IActionResult> Register(User newUser)

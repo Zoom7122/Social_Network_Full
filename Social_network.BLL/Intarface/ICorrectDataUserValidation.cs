@@ -9,6 +9,6 @@ namespace Social_network.BLL.Intarface
 {
     public interface ICorrectDataUserValidation
     {
-        Task<UserViewModel> UserCanLOgINAccount(ForLoginUser user);
+        Task<User> UserCanLOgINAccount(ForLoginUser user);
     }
 }

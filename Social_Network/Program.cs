@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Social_network.BLL.Intarface;
 using Social_network.BLL.Validations;
@@ -15,6 +16,11 @@ builder.Services.AddScoped<IValidationUser, ValidationUser>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<ICorrectDataUserValidation, CorrectDataUserValidation>();
 
+builder.Services.AddAuthentication("Cookies")
+    .AddCookie("Cookies", options =>
+    {
+        options.LoginPath = "/Home/Login";
+    });
 
 var app = builder.Build();
 
@@ -26,7 +32,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
