@@ -1,60 +1,111 @@
-﻿@{
-    ViewData["Title"] = "Добавить в друзья";
+﻿@model bool?
+@{
+    ViewData["Title"] = "Добавить друга";
 }
 
 <style>
-    table {
-        border-spacing: 0 15px;
-        align-self: center;
-    }
-
-    th {
-        background-color: #4287f5;
-        color: white;
-    }
-
-    th,
-    td {
-        width: 150px;
+    .simple-add-friend {
+        max-width: 450px;
+        margin: 50px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        border: 1px solid #f0f0f0;
         text-align: center;
+    }
+
+        .simple-add-friend h2 {
+            color: #667eea;
+            font-weight: 300;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+    .simple-input {
+        width: 100%;
+        padding: 14px;
+        margin: 15px 0;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+
+        .simple-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
+
+    .simple-button {
+        width: 100%;
+        padding: 14px;
+        background: #28a745;
+        color: white;
         border: none;
-        padding: 5px;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        margin-top: 10px;
     }
 
-    h2 {
-        color: #4287f5;
+    .result-box {
+        padding: 25px;
+        margin: 20px 0;
+        border-radius: 8px;
     }
 
-    .submit-button {
-        position: absolute;
-        margin-left: 140px;
+    .success-box {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .error-box {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
     }
 </style>
 
+<div class="simple-add-friend">
+    <h2>➕ Добавить друга</h2>
 
-<div class="text-center">
-    <div>
-        @if (Model == null)
-        {
-            <form method="post">
-                <table>
-                    <tr>
-                        <td>Email:</td>
-                        <td><input type="text" name="Email" required title="Пожалуйста, введите поле" /> </td>
-                    </tr>
-                </table>
-                <div class="submit-button">
-                    <input type="submit" value="Вход" />
-                </div>
-            </form>
-        }
-        else if (Model == true)
-        {
-            <p>Вы добавили друга</p>
-        }
-        else if (Model == false)
-        {
-            <p>Друг уже добавлен</p>
-        }
-    </div>
+    @if (Model == null)
+    {
+        <form method="post">
+            <input type="email"
+                   name="Email"
+                   class="simple-input"
+                   placeholder="Введите email друга"
+                   required />
+
+            <button type="submit" class="simple-button">
+                Отправить запрос
+            </button>
+        </form>
+    }
+    else if (Model == true)
+    {
+        <div class="result-box success-box">
+            <h3 style="margin-bottom: 10px;">✅ Запрос отправлен</h3>
+            <p>Пользователь получит ваш запрос на добавление в друзья.</p>
+        </div>
+
+        <a href="@Url.Action("FriendsView", "Friends")" style="display: inline-block; margin-top: 15px; color: #667eea;">
+            ← Назад к списку друзей
+        </a>
+    }
+    else if (Model == false)
+    {
+        <div class="result-box error-box">
+            <h3 style="margin-bottom: 10px;">⚠️ Ошибка</h3>
+            <p>Не удалось добавить пользователя в друзья.</p>
+        </div>
+
+        <button onclick="window.location.href='@Url.Action("AddFriends", "Friends")'"
+                style="padding: 10px 20px; margin-top: 15px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Попробовать снова
+        </button>
+    }
 </div>

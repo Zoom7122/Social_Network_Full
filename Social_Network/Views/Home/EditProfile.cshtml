@@ -1,24 +1,114 @@
 ﻿@model Social_network.DAL.Models.User
 
-<h3>Редактировать профиль</h3>
+<style>
+    .simple-edit {
+        max-width: 450px;
+        margin: 50px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        border: 1px solid #f0f0f0;
+    }
 
-<form method="post" action="@Url.Action("EditProfile", "Home")">
-    <input type="hidden" name="Id" value="@Model.Id" />
+        .simple-edit h2 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 25px;
+            font-weight: 300;
+            font-size: 1.8rem;
+        }
 
-    <p>Имя: <input type="text" name="FirstName" value="@Model.FirstName" required /></p>
-    <p>Фамилия: <input type="text" name="LastName" value="@Model.LastName" required /></p>
-    <p>Дата рождения: <input type="date" name="BirthDate" value="@Model.BirthDate.ToString("yyyy-MM-dd")" required /></p>
-    <p>Email: <input type="email" name="Email" value="@Model.Email" required /></p>
-    <p>Пароль: <input type="password" name="password" placeholder="Новый пароль" /></p>
+    .simple-input {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
 
-    <!-- Кнопка типа SUBMIT - отправляет форму -->
-    <button type="submit" class="btn btn-primary">
-        Сохранить изменения
-    </button>
+        .simple-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+        }
 
-    <button type="button"
-            onclick="window.location.href='@Url.Action("MainAccountView", "Home")'"
-            class="btn btn-secondary">
-        Отмена
-    </button>
-</form>
+    .simple-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+    }
+
+    .simple-btn {
+        padding: 12px 25px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        flex: 1;
+    }
+
+    .simple-save {
+        background: #667eea;
+        color: white;
+    }
+
+    .simple-cancel {
+        background: #f8f9fa;
+        color: #333;
+        border: 1px solid #ddd;
+    }
+</style>
+
+<div class="simple-edit">
+    <h2>✏️ Редактирование профиля</h2>
+
+    <form method="post" action="@Url.Action("EditProfile", "Home")">
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <input type="text"
+               name="FirstName"
+               value="@Model.FirstName"
+               class="simple-input"
+               placeholder="Имя"
+               required />
+
+        <input type="text"
+               name="LastName"
+               value="@Model.LastName"
+               class="simple-input"
+               placeholder="Фамилия"
+               required />
+
+        <input type="date"
+               name="BirthDate"
+               value="@Model.BirthDate.ToString("yyyy-MM-dd")"
+               class="simple-input"
+               required />
+
+        <input type="email"
+               name="Email"
+               value="@Model.Email"
+               class="simple-input"
+               placeholder="Email"
+               required />
+
+        <input type="password"
+               name="password"
+               class="simple-input"
+               placeholder="Новый пароль (не обязательно)" />
+
+        <div class="simple-buttons">
+            <button type="submit" class="simple-btn simple-save">
+                Сохранить
+            </button>
+
+            <button type="button"
+                    onclick="window.location.href='@Url.Action("MainAccountView", "Home")'"
+                    class="simple-btn simple-cancel">
+                Отмена
+            </button>
+        </div>
+    </form>
+</div>

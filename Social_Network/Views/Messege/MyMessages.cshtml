@@ -1,50 +1,220 @@
 ﻿@model List<object>
-
 @{
     var messages = Model ?? new List<object>();
 }
 
-<h2>📨 Все полученные сообщения</h2>
+<style>
+    .modern-messages {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+        border: 1px solid #f0f0f0;
+    }
 
-@if (messages.Any())
-{
-    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-        <thead>
-            <tr style="background-color: #f2f2f2;">
-                <th style="border: 1px solid #ddd; padding: 8px;">От кого</th>
-                <th style="border: 1px solid #ddd; padding: 8px;">Email</th>
-                <th style="border: 1px solid #ddd; padding: 8px;">Сообщение</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (dynamic item in messages)
-            {
-                var message = item.Message as Social_network.DAL.Models.Message;
-                <tr style="border: 1px solid #ddd;">
-                    <td style="border: 1px solid #ddd; padding: 8px;">
-                        <strong>@item.SenderName</strong>
-                    </td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">
-                        @item.SenderEmail
-                    </td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">
-                        @message.Text
-                    </td>
-                </tr>
+    .modern-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eaeaea;
+    }
+
+        .modern-header h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+    .messages-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 40px;
+    }
+
+        .messages-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .messages-table th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+            .messages-table th:first-child {
+                border-radius: 10px 0 0 0;
             }
-        </tbody>
-    </table>
-}
-else
-{
-    <p style="margin-top: 20px; color: #666;">
-        У вас нет полученных сообщений.
-    </p>
-}
 
-<div style="margin-top: 30px;">
-    <button type="button"
-            onclick="window.location.href='@Url.Action("MainAccountView", "Home")'"
-            class="btn btn-primary">
-        Перейти
-    </button>
+            .messages-table th:last-child {
+                border-radius: 0 10px 0 0;
+            }
+
+        .messages-table tbody tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+            .messages-table tbody tr:hover {
+                background-color: #f8f9fa;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            }
+
+        .messages-table td {
+            padding: 20px 15px;
+            color: #333;
+            vertical-align: top;
+        }
+
+    .sender-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .sender-initial {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(45deg, #4776E6, #8E54E9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .sender-details {
+        flex: 1;
+    }
+
+    .sender-name {
+        font-weight: 600;
+        margin-bottom: 3px;
+        color: #333;
+    }
+
+    .sender-email {
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .message-cell {
+        max-width: 400px;
+        line-height: 1.5;
+        color: #444;
+        word-wrap: break-word;
+    }
+
+    .modern-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .modern-btn {
+        padding: 14px 30px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: 2px solid #667eea;
+        color: #667eea;
+        background: white;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+        .modern-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1);
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        opacity: 0.5;
+    }
+
+    .empty-title {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: #333;
+        font-weight: 300;
+    }
+</style>
+
+<div class="modern-messages">
+    <div class="modern-header">
+        <h1>📨 Полученные сообщения</h1>
+        <p>Всего сообщений: <strong>@messages.Count</strong></p>
+    </div>
+
+    @if (messages.Any())
+    {
+        <table class="messages-table">
+            <thead>
+                <tr>
+                    <th style="width: 30%;">Отправитель</th>
+                    <th style="width: 70%;">Сообщение</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (dynamic item in messages)
+                {
+                    var message = item.Message as Social_network.DAL.Models.Message;
+                    var senderName = item.SenderName?.ToString() ?? "Неизвестный";
+                    var senderEmail = item.SenderEmail?.ToString() ?? "";
+
+                    <tr>
+                        <td>
+                            <div class="sender-cell">
+                                <div class="sender-initial">
+                                    @if (!string.IsNullOrEmpty(senderName))
+                                    {
+                                        @senderName[0]
+                                    }
+                                </div>
+                                <div class="sender-details">
+                                    <div class="sender-name">@senderName</div>
+                                    <div class="sender-email">@senderEmail</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="message-cell">@message.Text</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="empty-state">
+            <div class="empty-icon">📭</div>
+            <h2 class="empty-title">Сообщений пока нет</h2>
+            <p>Когда друзья будут отправлять вам сообщения, они появятся здесь.</p>
+        </div>
+    }
+
+    <div class="modern-buttons">
+        <button onclick="window.location.href='@Url.Action("MainAccountView", "Home")'" class="modern-btn">
+            ← Назад в профиль
+        </button>
+    </div>
+</div>

@@ -1,39 +1,129 @@
-﻿
-<h3>Мои друзья</h3>
+﻿@model List<Social_network.BLL.ClassToViewFriends.Friend>
 
-@if (Model != null)
-{
-    <ul class="list-group">
+<style>
+    .simple-friends {
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .simple-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+        .simple-header h2 {
+            color: #667eea;
+            font-weight: 300;
+            font-size: 1.8rem;
+        }
+
+    .friend-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        margin-bottom: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border-left: 3px solid #667eea;
+    }
+
+    .friend-text {
+        flex: 1;
+    }
+
+    .friend-name {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .friend-email {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .action-btn {
+        padding: 8px 15px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .msg-btn {
+        background: #28a745;
+        color: white;
+    }
+
+    .del-btn {
+        background: #dc3545;
+        color: white;
+    }
+
+    .add-btn {
+        width: 100%;
+        padding: 14px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="simple-friends">
+    <div class="simple-header">
+        <h2>👥 Мои друзья</h2>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
         @foreach (var friend in Model)
         {
-            <li>
-                <div>
-                    <strong>@friend.FullName</strong>
-                    <strong>@friend.Email</strong>
-                    <button type="button"
-                            onclick="window.location.href='@Url.Action("SendMessege", "Messege",
-                            new { FriendID = friend.FriendID })'"
-                            class="btn btn-primary">
-                        Написать сообщение
-                    </button>
-            <button type="button"
-                    onclick="window.location.href='@Url.Action("FriendIsDeleted", "Friends",
-                                                new { FriendID = friend.FriendID })'"
-                    class="btn btn-primary">
-                Удалить друга
-            </button>
+            <div class="friend-item">
+                <div class="friend-text">
+                    <div class="friend-name">@friend.FullName</div>
+                    <div class="friend-email">@friend.Email</div>
                 </div>
-            </li>
-        }
-    </ul>
-}
-else
-{
-    <p>У вас пока нет друзей.</p>
-}
 
-<button type="button"
-        onclick="window.location.href='@Url.Action("AddFriends", "Friends")'"
-        class="btn btn-primary">
-    Добавить друзей
-</button>
+                <div class="action-buttons">
+                    <button type="button"
+                            onclick="window.location.href='@Url.Action("SendMessege", "Messege", new { FriendID = friend.FriendID })'"
+                            class="action-btn msg-btn">
+                        Написать
+                    </button>
+
+                    <button type="button"
+                            onclick="window.location.href='@Url.Action("FriendIsDeleted", "Friends", new { FriendID = friend.FriendID })'"
+                            class="action-btn del-btn">
+                        Удалить
+                    </button>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div style="text-align: center; padding: 40px 20px; color: #666;">
+            <p style="font-size: 1.1rem;">У вас пока нет друзей.</p>
+        </div>
+    }
+
+    <button type="button"
+            onclick="window.location.href='@Url.Action("AddFriends", "Friends")'"
+            class="add-btn">
+        ➕ Добавить друзей
+    </button>
+</div>

@@ -1,64 +1,269 @@
-﻿@{
+﻿@model Social_network.BLL.Models.ForLoginUser
+@{
     ViewData["Title"] = "Вход в аккаунт";
 }
 
 <style>
-    table {
-        border-spacing: 0 15px;
-        align-self: center;
-    }
-
-    th {
-        background-color: #4287f5;
+    .login-container {
+        max-width: 500px;
+        margin: 80px auto;
+        padding: 40px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 25px;
         color: white;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        position: relative;
+        overflow: hidden;
     }
 
-    th,
-    td {
-        width: 150px;
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            border-radius: 25px 25px 0 0;
+        }
+
+    .login-header {
         text-align: center;
-        border: none;
-        padding: 5px;
+        margin-bottom: 40px;
+        position: relative;
     }
 
-    h2 {
-        color: #4287f5;
+    .login-title {
+        font-size: 2.5rem;
+        font-weight: 300;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .login-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 30px;
+    }
+
+    .login-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        color: #333;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.95rem;
+        color: #666;
+        margin-bottom: 8px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 16px 20px;
+        border: 2px solid #e1e5e9;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+        box-sizing: border-box;
+    }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #aaa;
+        }
+
+    .input-icon {
+        position: absolute;
+        right: 20px;
+        top: 42px;
+        color: #667eea;
+        font-size: 1.2rem;
     }
 
     .submit-button {
-        position: absolute;
-        margin-left: 140px;
+        width: 100%;
+        padding: 18px;
+        background: linear-gradient(45deg, #4776E6, #8E54E9);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
     }
+
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #3a65d6, #7d47d8);
+        }
+
+        .submit-button:active {
+            transform: translateY(-1px);
+        }
+
+    .register-link {
+        text-align: center;
+        margin-top: 25px;
+        padding-top: 25px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .register-text {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 10px;
+    }
+
+    .register-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+        .register-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+    .error-message {
+        background: rgba(231, 76, 60, 0.1);
+        color: #e74c3c;
+        padding: 12px 20px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(231, 76, 60, 0.3);
+        text-align: center;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 20px;
+        top: 42px;
+        background: none;
+        border: none;
+        color: #667eea;
+        cursor: pointer;
+        font-size: 1.2rem;
+    }
+
 </style>
 
+<div class="login-container">
+    <div class="login-header">
+        <h1 class="login-title">👋 С возвращением!</h1>
+        <p class="login-subtitle">Рады видеть вас снова в нашей социальной сети</p>
+    </div>
 
-<div class="text-center">
-    <div>
-        @if (Model == null)
+    <div class="login-card">
+        @if (ViewData["ErrorMessage"] != null)
         {
-            <h3 style="text-align: left">Добро пожаловать в наш блог!</h3>
-            <br>
+            <div class="error-message">
+                ❌ @ViewData["ErrorMessage"]
+            </div>
+        }
 
-            <form method="post">
-                <table>
-                    <tr>
-                        <td>Email:</td>
-                        <td><input type="text" name="Email" required title="Пожалуйста, введите поле" /> </td>
-                    </tr>
-                    <tr>
-                        <td>Password:</td>
-                        <td><input type="text" name="Password" minlenght="8" required title="Пожалуйста, введите поле" /></td>
-                    </tr>
-                </table>
-                <br>
-                <div class="submit-button">
-                    <input type="submit" value="Вход" />
-                </div>
-            </form>
-        }
-        else
-        {
-            
-        }
+        <form method="post">
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="icon">✉️</i> Email
+                </label>
+                <input type="email"
+                       name="Email"
+                       class="form-input"
+                       placeholder="example@mail.com"
+                       required
+                       value="@Model?.Email" />
+                <span class="input-icon">📧</span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <i class="icon">🔒</i> Пароль
+                </label>
+                <input type="password"
+                       name="Password"
+                       id="passwordInput"
+                       class="form-input"
+                       placeholder="Введите ваш пароль"
+                       minlength="8"
+                       required />
+                <button type="button"
+                        class="password-toggle"
+                        onclick="togglePassword()">
+                    👁️
+                </button>
+            </div>
+
+            <button type="submit" class="submit-button">
+                <i class="icon">🚀</i> Войти в аккаунт
+            </button>
+        </form>
+    </div>
+
+    <div class="register-link">
+        <p class="register-text">Ещё нет аккаунта?</p>
+        <a href="@Url.Action("Register", "Home")" class="register-btn">
+            <i class="icon">📝</i> Создать новый аккаунт
+        </a>
     </div>
 </div>
+
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('passwordInput');
+        const toggleButton = document.querySelector('.password-toggle');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleButton.innerHTML = '🙈';
+            toggleButton.title = 'Скрыть пароль';
+        } else {
+            passwordInput.type = 'password';
+            toggleButton.innerHTML = '👁️';
+            toggleButton.title = 'Показать пароль';
+        }
+    }
+
+    // Добавляем плавный фокус на поля ввода
+    document.querySelectorAll('.form-input').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'translateY(-2px)';
+        });
+
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'translateY(0)';
+        });
+    });
+</script>

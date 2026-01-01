@@ -1,75 +1,359 @@
-﻿@{
-    ViewData["Title"] = "Регистрация нового пользователя.";
+﻿@model Social_network.DAL.Models.User
+@{
+    ViewData["Title"] = "Регистрация нового пользователя";
 }
 
 <style>
-    table {
-        border-spacing: 0 15px;
-        align-self: center;
-    }
-
-    th {
-        background-color: #4287f5;
+    .register-container {
+        max-width: 600px;
+        margin: 60px auto;
+        padding: 40px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 25px;
         color: white;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        position: relative;
+        overflow: hidden;
     }
 
-    th,
-    td {
-        width: 150px;
+        .register-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            border-radius: 25px 25px 0 0;
+        }
+
+    .register-header {
         text-align: center;
-        border: none;
-        padding: 5px;
+        margin-bottom: 40px;
+        position: relative;
     }
 
-    h2 {
-        color: #4287f5;
+    .register-title {
+        font-size: 2.5rem;
+        font-weight: 300;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .register-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 30px;
+    }
+
+    .register-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        color: #333;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 8px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 16px 20px;
+        border: 2px solid #e1e5e9;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+        box-sizing: border-box;
+    }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #aaa;
+        }
+
+    .input-icon {
+        position: absolute;
+        right: 20px;
+        top: 42px;
+        color: #667eea;
+        font-size: 1.2rem;
     }
 
     .submit-button {
-        position: absolute;
-        margin-left: 140px;
+        width: 100%;
+        padding: 18px;
+        background: linear-gradient(45deg, #00b09b, #96c93d);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
     }
+
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #00a08b, #86b936);
+        }
+
+        .submit-button:active {
+            transform: translateY(-1px);
+        }
+
+    .login-link {
+        text-align: center;
+        margin-top: 25px;
+        padding-top: 25px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .login-text {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 10px;
+    }
+
+    .login-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+        .login-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+    .error-message {
+        background: rgba(231, 76, 60, 0.1);
+        color: #e74c3c;
+        padding: 12px 20px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(231, 76, 60, 0.3);
+        text-align: center;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 20px;
+        top: 42px;
+        background: none;
+        border: none;
+        color: #667eea;
+        cursor: pointer;
+        font-size: 1.2rem;
+    }
+
 </style>
 
-<div class="text-center">
-    <div>
-        @if (Model == null)
-        {
-            <h3 style="text-align: left">Добро пожаловать в наш блог!</h3>
-            <br>
+<div class="register-container">
+    @if (Model == null)
+    {
+        <div class="register-header">
+            <h1 class="register-title">🚀 Присоединяйтесь к нам!</h1>
+            <p class="register-subtitle">Создайте аккаунт и начните общаться с друзьями</p>
+        </div>
+
+        <div class="register-card">
+            @if (ViewData["ErrorMessage"] != null)
+            {
+                <div class="error-message">
+                    ❌ @ViewData["ErrorMessage"]
+                </div>
+            }
 
             <form method="post">
-                <table>
-                    <tr>
-                        <td>Имя:</td>
-                        <td><input type="text" name="FirstName" required title="Пожалуйста, введите поле" /> </td>
-                    </tr>
-                    <tr>
-                        <td>Фамилия:</td>
-                        <td><input type="text" name="LastName" required title="Пожалуйста, введите поле" /></td>
-                    </tr>
-                    <tr>
-                        <td>Дата рождения:</td>
-                        <td><input type="date" name="BirthDate" required title="Пожалуйста, введите поле" /></td>
-                    </tr>
-                    <tr>
-                        <td>Пароль:</td>
-                        <td><input type="text" name="password" minlength="8" required title="Пожалуйста, введите поле" /></td>
-                    </tr>
-                    <tr>
-                        <td>Почта:</td>
-                        <td><input type="text" name="Email" required title="Пожалуйста, введите поле" /></td>
-                    </tr>
-                </table>
-                <br>
-                <div class="submit-button">
-                    <input type="submit" value="Регистрация" />
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="icon">👤</i> Имя
+                        </label>
+                        <input type="text"
+                               name="FirstName"
+                               class="form-input"
+                               placeholder="Введите ваше имя"
+                               required />
+                        <span class="input-icon">👤</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="icon">👥</i> Фамилия
+                        </label>
+                        <input type="text"
+                               name="LastName"
+                               class="form-input"
+                               placeholder="Введите вашу фамилию"
+                               required />
+                        <span class="input-icon">👥</span>
+                    </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="icon">🎂</i> Дата рождения
+                    </label>
+                    <input type="date"
+                           name="BirthDate"
+                           class="form-input"
+                           required />
+                    <span class="input-icon">📅</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="icon">✉️</i> Email
+                    </label>
+                    <input type="email"
+                           name="Email"
+                           class="form-input"
+                           placeholder="example@mail.com"
+                           required />
+                    <span class="input-icon">📧</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="icon">🔒</i> Пароль
+                    </label>
+                    <input type="password"
+                           name="password"
+                           id="passwordInput"
+                           class="form-input"
+                           placeholder="Минимум 8 символов"
+                           minlength="8"
+                           required />
+                    <button type="button"
+                            class="password-toggle"
+                            onclick="togglePassword()">
+                        👁️
+                    </button>
+                </div>
+
+                <button type="submit" class="submit-button">
+                    <i class="icon">✨</i> Создать аккаунт
+                </button>
             </form>
-        }
-        else
-        {
-            @await Html.PartialAsync("_ThanksForRegister")
-        }
-    </div>
+        </div>
+
+        <div class="login-link">
+            <p class="login-text">Уже есть аккаунт?</p>
+            <a href="@Url.Action("Login", "Home")" class="login-btn">
+                <i class="icon">🔐</i> Войти в существующий
+            </a>
+        </div>
+    }
+    else
+    {
+        <!-- Благодарность за регистрацию -->
+        <div class="register-header">
+            <h1 class="register-title">🎉 Добро пожаловать, @Model.FirstName!</h1>
+            <p class="register-subtitle">Ваш аккаунт успешно создан</p>
+        </div>
+
+        <div class="register-card" style="text-align: center;">
+            <div style="font-size: 5rem; margin: 20px 0;">✨</div>
+            <h2 style="color: #333; margin-bottom: 20px;">Регистрация завершена!</h2>
+            <p style="color: #666; margin-bottom: 30px; font-size: 1.1rem;">
+                Теперь вы можете войти в свой аккаунт и начать общение с друзьями.
+            </p>
+
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px;">
+                <a href="@Url.Action("Login", "Home")"
+                   style="padding: 15px 30px; background: #4776E6; color: white; text-decoration: none; border-radius: 10px; font-weight: 500;">
+                    🔐 Войти в аккаунт
+                </a>
+
+                <a href="@Url.Action("Index", "Home")"
+                   style="padding: 15px 30px; background: #f8f9fa; color: #333; text-decoration: none; border-radius: 10px; font-weight: 500; border: 2px solid #e1e5e9;">
+                    🏠 На главную
+                </a>
+            </div>
+        </div>
+    }
 </div>
+
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('passwordInput');
+        const toggleButton = document.querySelector('.password-toggle');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleButton.innerHTML = '🙈';
+            toggleButton.title = 'Скрыть пароль';
+        } else {
+            passwordInput.type = 'password';
+            toggleButton.innerHTML = '👁️';
+            toggleButton.title = 'Показать пароль';
+        }
+    }
+
+    function toggleConfirmPassword() {
+        const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+        const toggleButtons = document.querySelectorAll('.password-toggle');
+        const toggleButton = toggleButtons[1];
+
+        if (confirmPasswordInput.type === 'password') {
+            confirmPasswordInput.type = 'text';
+            toggleButton.innerHTML = '🙈';
+            toggleButton.title = 'Скрыть пароль';
+        } else {
+            confirmPasswordInput.type = 'password';
+            toggleButton.innerHTML = '👁️';
+            toggleButton.title = 'Показать пароль';
+        }
+    }
+
+    // Добавляем плавный фокус на поля ввода
+    document.querySelectorAll('.form-input').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'translateY(-2px)';
+        });
+
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'translateY(0)';
+        });
+    });
+</script>
