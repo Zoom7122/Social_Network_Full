@@ -39,6 +39,12 @@ namespace Social_Network.Controllers
         [Route("Login")]
         public IActionResult Login()
         {
+
+            if (User.Identity?.IsAuthenticated ?? false)
+            {
+                return RedirectToAction("MainAccountView");
+            }
+
             return View();
         }
 
@@ -59,9 +65,6 @@ namespace Social_Network.Controllers
 
                 var authProperties = new AuthenticationProperties
                 {
-                    // ВАЖНО: IsPersistent = true создаёт постоянную куку
-                    IsPersistent = true, // ? Это ключевая настройка!
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7),
                     AllowRefresh = true,
                     IssuedUtc = DateTimeOffset.UtcNow
                 };
@@ -71,17 +74,98 @@ namespace Social_Network.Controllers
                     new ClaimsPrincipal(identity),
                     authProperties);
 
-                return View("MainAccountView",us);
+                return RedirectToAction("MainAccountView");
             }
             else return StatusCode(404, "Не найден пользователь");
+        }
+
+
+        [Authorize]
+        [HttpGet]
+        [Route("EditProfile")]
+        public async Task<IActionResult> EditProfile()
+        {
+            var userIdClaim = User.FindFirst("UserId");
+
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out Guid userId))
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return RedirectToAction("Login");
+            }
+
+            var us = await _correctDataUserBLL.GetUserByIdAsync(userId);
+
+            if (us == null)
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return RedirectToAction("Login");
+            }
+
+            return View("EditProfile", us);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("EditProfile")]
+        public async Task<IActionResult> EditProfile(string FirstName, string LastName, DateTime BirthDate,
+            string Email, string Password)
+        {
+            var userIdClaim = User.FindFirst("UserId");
+
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out Guid userId))
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return RedirectToAction("Login");
+            }
+
+            var us = await _correctDataUserBLL.GetUserByIdAsync(userId);
+
+            if (us == null)
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return RedirectToAction("Login");
+            }
+
+            var newUser = new User()
+            {
+                FirstName = FirstName,
+                LastName = LastName,
+                BirthDate = BirthDate,
+                Email = Email,
+                password = Password,
+                FriendsID = us.FriendsID,
+                MessegesFromUser = us.MessegesFromUser,
+                MessegesToUser = us.MessegesToUser,
+                Id = us.Id
+            };
+
+            bool result = await _validUserBLL.UpdateUser(newUser);
+
+            return View("MainAccountView", newUser);
         }
 
         [Authorize]
         [HttpGet]
         [Route("MainAccountView")]
-        public async Task<IActionResult> MainAccountView(User user)
+        public async Task<IActionResult> MainAccountView()
         {
-            return View("MainAccountView", user);
+            var userIdClaim = User.FindFirst("UserId");
+
+            if (userIdClaim == null || !Guid.TryParse(userIdClaim.Value, out Guid userId))
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return RedirectToAction("Login");
+            }
+
+            var us = await _correctDataUserBLL.GetUserByIdAsync(userId);
+
+            if (us == null)
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return RedirectToAction("Login");
+            }
+
+            return View("MainAccountView", us);
         }
 
         [AllowAnonymous]
@@ -110,6 +194,14 @@ namespace Social_Network.Controllers
             {
                 return StatusCode(401, ex.Message);
             }
+        }
+
+        [HttpGet]
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

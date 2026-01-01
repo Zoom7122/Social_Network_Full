@@ -1,7 +1,7 @@
 ﻿using Social_network.BLL.Intarface;
 using Social_network.BLL.Models;
+using Social_network.DAL.Interface;
 using Social_network.DAL.Models;
-using Social_network.DAL.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,6 +14,11 @@ namespace Social_network.BLL.Validations
         public CorrectDataUserValidation(IUserRepo userRepo)
         {
             _userRepo = userRepo;
+        }
+
+        public Task<User> GetUserByIdAsync(Guid id)
+        {
+            return _userRepo.GetUserById(id);
         }
 
         public async Task<User> UserCanLOgINAccount(ForLoginUser user)

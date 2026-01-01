@@ -6,6 +6,7 @@ using Social_network.DAL.Models;
 using Social_network.DAL.Repository;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Text;
 
 namespace Social_network.DAL.Tests
@@ -74,8 +75,8 @@ namespace Social_network.DAL.Tests
         }
 
         [Theory]
-        [InlineData("5593B9A6-64D0-4635-8986-0047266A8BF3", "2D6357CF-295B-47C5-8579-5F92F71F58B5")]
-        [InlineData("2D6357CF-295B-47C5-8579-5F92F71F58B5", "5593B9A6-64D0-4635-8986-0047266A8BF3")]
+        [InlineData("F29E90EC-21BF-41EB-B1DC-1DE2D9DC56B4", "217ADF5A-F395-4087-8422-42DFE787A80D")]
+        [InlineData("F29E90EC-21BF-41EB-B1DC-1DE2D9DC56B4", "14D08CA4-C4FC-49BD-8CD1-C7015DE8EE71")]
         public async Task CanAddToFriends(Guid main_ID, Guid toAdd_ID)
         {
             var opption = new DbContextOptionsBuilder<ContextSocial_Network_Context>().UseSqlServer(REAL_DB_CONNECTION).Options;
@@ -85,6 +86,21 @@ namespace Social_network.DAL.Tests
             var repo2 = new PersonalFunction(repo1,context);
 
             var answer = await repo2.AddToFriends(main_ID, toAdd_ID);
+
+            Assert.True(answer);
+        }
+
+        [Theory]
+        [InlineData("3A688D56-7BC1-4DA1-917B-1A3752071A0C", "7EDC3E87-5182-489D-B3C9-D0045503B8F3")]
+        public async Task Shood_Text_Messege(Guid IDFrom, Guid IDTo)
+        {
+            var oprions = new DbContextOptionsBuilder<ContextSocial_Network_Context>().UseSqlServer(REAL_DB_CONNECTION).Options;
+            using var context = new ContextSocial_Network_Context(oprions);
+
+            var repo1 = new UserRepo(context);
+            var repo2 = new MessegeRepo(context, repo1);
+
+            var answer = await repo2.EnterMessege(IDFrom, IDTo, "Текстовое сообщение2");
 
             Assert.True(answer);
         }

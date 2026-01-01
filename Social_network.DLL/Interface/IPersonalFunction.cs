@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Social_network.DAL.Repository
+namespace Social_network.DAL.Interface
 {
     public interface IPersonalFunction
     {

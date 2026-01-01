@@ -9,5 +9,6 @@ namespace Social_network.BLL.Intarface
     {
         Task AccreptUser(User user);
 
+        Task<bool> UpdateUser(User newUserm);
     }
 }

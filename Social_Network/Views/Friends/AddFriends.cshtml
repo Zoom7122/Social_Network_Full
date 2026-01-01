@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Вход в аккаунт";
+    ViewData["Title"] = "Добавить в друзья";
 }
 
 <style>
@@ -36,29 +36,25 @@
     <div>
         @if (Model == null)
         {
-            <h3 style="text-align: left">Добро пожаловать в наш блог!</h3>
-            <br>
-
             <form method="post">
                 <table>
                     <tr>
                         <td>Email:</td>
                         <td><input type="text" name="Email" required title="Пожалуйста, введите поле" /> </td>
                     </tr>
-                    <tr>
-                        <td>Password:</td>
-                        <td><input type="text" name="Password" minlenght="8" required title="Пожалуйста, введите поле" /></td>
-                    </tr>
                 </table>
-                <br>
                 <div class="submit-button">
                     <input type="submit" value="Вход" />
                 </div>
             </form>
         }
-        else
+        else if (Model == true)
         {
-            
+            <p>Вы добавили друга</p>
+        }
+        else if (Model == false)
+        {
+            <p>Друг уже добавлен</p>
         }
     </div>
 </div>

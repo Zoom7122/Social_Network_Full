@@ -1,0 +1,39 @@
+﻿
+<h3>Мои друзья</h3>
+
+@if (Model != null)
+{
+    <ul class="list-group">
+        @foreach (var friend in Model)
+        {
+            <li>
+                <div>
+                    <strong>@friend.FullName</strong>
+                    <strong>@friend.Email</strong>
+                    <button type="button"
+                            onclick="window.location.href='@Url.Action("SendMessege", "Messege",
+                            new { FriendID = friend.FriendID })'"
+                            class="btn btn-primary">
+                        Написать сообщение
+                    </button>
+            <button type="button"
+                    onclick="window.location.href='@Url.Action("FriendIsDeleted", "Friends",
+                                                new { FriendID = friend.FriendID })'"
+                    class="btn btn-primary">
+                Удалить друга
+            </button>
+                </div>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>У вас пока нет друзей.</p>
+}
+
+<button type="button"
+        onclick="window.location.href='@Url.Action("AddFriends", "Friends")'"
+        class="btn btn-primary">
+    Добавить друзей
+</button>

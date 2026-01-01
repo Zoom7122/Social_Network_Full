@@ -16,5 +16,9 @@ namespace Social_network.DAL.Models
         public string password { get; set; }
         public string Email { get; set; }
         public List<Guid>? FriendsID { get; set; } = new List<Guid>();
+
+        public List<Guid>? MessegesFromUser { get; set; } = new List<Guid>();
+
+        public List<Guid>? MessegesToUser { get; set; } = new List<Guid>();
     }
 }

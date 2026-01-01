@@ -9,7 +9,9 @@ namespace Social_network.DAL
     public class ContextSocial_Network_Context : DbContext
     {
         public DbSet<User> Users { get; set; }
-        
+
+        public DbSet<Message> Messeges { get; set; }
+
         public ContextSocial_Network_Context(DbContextOptions<ContextSocial_Network_Context> opt) : base(opt)
         {
             Database.EnsureCreated();

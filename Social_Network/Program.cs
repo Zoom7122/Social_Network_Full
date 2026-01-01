@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Social_network.BLL.Intarface;
 using Social_network.BLL.Validations;
+using Social_network.BLL.Models;
 using Social_network.DAL;
 using Social_network.DAL.Repository;
+using Social_network.DAL.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,9 @@ builder.Services.AddDbContext<ContextSocial_Network_Context>(opt => opt.UseSqlSe
 builder.Services.AddScoped<IValidationUser, ValidationUser>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<ICorrectDataUserValidation, CorrectDataUserValidation>();
+builder.Services.AddScoped<IFreindsBLL, FriendsBLL>();
+builder.Services.AddScoped<IPersonalFunction, PersonalFunction>();
+builder.Services.AddScoped<IMessegeRepo, MessegeRepo>();
 
 builder.Services.AddAuthentication("Cookies")
     .AddCookie("Cookies", options =>
@@ -34,7 +39,6 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
 app.UseAuthorization();
 
 app.MapStaticAssets();

@@ -10,5 +10,6 @@ namespace Social_network.BLL.Intarface
     public interface ICorrectDataUserValidation
     {
         Task<User> UserCanLOgINAccount(ForLoginUser user);
+        Task<User> GetUserByIdAsync(Guid id);
     }
 }

@@ -1,0 +1,24 @@
+﻿@model Social_network.DAL.Models.User
+
+<h3>Редактировать профиль</h3>
+
+<form method="post" action="@Url.Action("EditProfile", "Home")">
+    <input type="hidden" name="Id" value="@Model.Id" />
+
+    <p>Имя: <input type="text" name="FirstName" value="@Model.FirstName" required /></p>
+    <p>Фамилия: <input type="text" name="LastName" value="@Model.LastName" required /></p>
+    <p>Дата рождения: <input type="date" name="BirthDate" value="@Model.BirthDate.ToString("yyyy-MM-dd")" required /></p>
+    <p>Email: <input type="email" name="Email" value="@Model.Email" required /></p>
+    <p>Пароль: <input type="password" name="password" placeholder="Новый пароль" /></p>
+
+    <!-- Кнопка типа SUBMIT - отправляет форму -->
+    <button type="submit" class="btn btn-primary">
+        Сохранить изменения
+    </button>
+
+    <button type="button"
+            onclick="window.location.href='@Url.Action("MainAccountView", "Home")'"
+            class="btn btn-secondary">
+        Отмена
+    </button>
+</form>

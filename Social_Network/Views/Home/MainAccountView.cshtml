@@ -10,10 +10,19 @@
     <p><strong>Фамилия:</strong> @Model.LastName</p>
     <p><strong>Email:</strong> @Model.Email</p>
     <p><strong>Дата рождения:</strong> @Model.BirthDate.ToString("dd.MM.yyyy")</p>
-        @* <button type="button"
-                onclick="window.location.href='@Url.Action("AddFriends", "Home", new { userId = Model.Id })'"
-                class="btn btn-primary">
-            Перейти
-        </button> *@
-    
+    <button type="button"
+            onclick="window.location.href='@Url.Action("FriendsView", "Friends")'"
+            class="btn btn-primary">
+        Перейти
+    </button>
+
+    <a href="@Url.Action("MyMessages", "Messege")" class="btn btn-info">
+        📨 Мои сообщения
+    </a>
+
+    <button type="button"
+            onclick="window.location.href='@Url.Action("EditProfile", "Home")'"
+            class="btn btn-primary">
+        Редактировать профиль
+    </button>
 </div>

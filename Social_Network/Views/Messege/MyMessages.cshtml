@@ -1,0 +1,50 @@
+﻿@model List<object>
+
+@{
+    var messages = Model ?? new List<object>();
+}
+
+<h2>📨 Все полученные сообщения</h2>
+
+@if (messages.Any())
+{
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead>
+            <tr style="background-color: #f2f2f2;">
+                <th style="border: 1px solid #ddd; padding: 8px;">От кого</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Email</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Сообщение</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (dynamic item in messages)
+            {
+                var message = item.Message as Social_network.DAL.Models.Message;
+                <tr style="border: 1px solid #ddd;">
+                    <td style="border: 1px solid #ddd; padding: 8px;">
+                        <strong>@item.SenderName</strong>
+                    </td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">
+                        @item.SenderEmail
+                    </td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">
+                        @message.Text
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p style="margin-top: 20px; color: #666;">
+        У вас нет полученных сообщений.
+    </p>
+}
+
+<div style="margin-top: 30px;">
+    <button type="button"
+            onclick="window.location.href='@Url.Action("MainAccountView", "Home")'"
+            class="btn btn-primary">
+        Перейти
+    </button>

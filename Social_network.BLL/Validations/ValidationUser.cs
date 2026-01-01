@@ -1,7 +1,7 @@
 ﻿using Microsoft.Identity.Client;
 using Social_network.BLL.Intarface;
+using Social_network.DAL.Interface;
 using Social_network.DAL.Models;
-using Social_network.DAL.Repository;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -39,6 +39,37 @@ namespace Social_network.BLL.Validations
 
 
             await _userRepo.RegisterUser(user);
+        }
+
+        public async Task<bool> UpdateUser(User newUserm)
+        {
+            bool result = true;
+
+            if (string.IsNullOrEmpty(newUserm.Email))
+                result = false;
+
+            if (string.IsNullOrEmpty(newUserm.FirstName))
+                result = false;
+
+            if (string.IsNullOrEmpty(newUserm.LastName))
+                result = false;
+
+            if (newUserm.password.Length < 8)
+                result = false;
+
+            if (newUserm.BirthDate == null)
+                result = false;
+
+            var EmailIsExist = await _userRepo.GetUserByEmail(newUserm.Email);
+
+            if(!(EmailIsExist == null || EmailIsExist.Id == newUserm.Id))
+                result = false;
+
+            if(result)
+            {
+                await _userRepo.UpdateUser(newUserm, newUserm.Id);
+            }
+            return result;
         }
 
     }
